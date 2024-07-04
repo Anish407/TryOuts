@@ -37,7 +37,7 @@ public class Program
        // CallingMethod resumed on thread 1
        // Main method resumed on thread 1
        // MySyncLikeAsyncMethod started on thread 7
-       // MySyncLikeAsyncMethod resumed on thread 8 -- continuation async
+       // MySyncLikeAsyncMethod resumed on thread 8 -- continuation async??
        // CPU work completed on thread 8
 
        
