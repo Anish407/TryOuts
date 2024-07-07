@@ -9,7 +9,7 @@ public class Program
     {
         Console.WriteLine($"Main method running on thread {Thread.CurrentThread.ManagedThreadId}");
 
-        await CallingMethod();
+         CallingMethod();
 
         Console.WriteLine($"Main method resumed on thread {Thread.CurrentThread.ManagedThreadId}");
         await Task.Delay(10000);

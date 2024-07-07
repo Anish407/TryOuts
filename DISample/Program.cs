@@ -33,6 +33,8 @@ static async Task MyHandler(
     
     using (var scope = serviceScopeFactory.CreateScope())
     {
+        var singletonClass1 = scope.ServiceProvider.GetRequiredService<SingletonClass>();
+        singletonClass1._transientClass.Age = 50;
         var scopedObj1 = scope.ServiceProvider.GetRequiredService<ScopedClass>();
         scopedObj1.Name = "Test";
         scopedObj1._transientClass.Age = 30;
@@ -41,26 +43,54 @@ static async Task MyHandler(
         
         var scopedObj2 = scope.ServiceProvider.GetRequiredService<ScopedClass>();
         var transientObj2 = scope.ServiceProvider.GetRequiredService<TransientClass>();
+        var singletonClass2 = scope.ServiceProvider.GetRequiredService<SingletonClass>();
     }
     
     using (var scope = serviceScopeFactory.CreateScope())
     {
         var scopedObj1 = scope.ServiceProvider.GetRequiredService<ScopedClass>();
         var transientObj1 = scope.ServiceProvider.GetRequiredService<TransientClass>();
+        var singletonClass1 = scope.ServiceProvider.GetRequiredService<SingletonClass>();
     }
 }
 
 
 public class SingletonClass
 {
-    public readonly ScopedClass _transientClass;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+    public readonly TransientClass _transientClass;
 
-    public SingletonClass(ScopedClass transientClass)
+    public SingletonClass(IServiceScopeFactory serviceScopeFactory, TransientClass transientClass)
     {
+        _serviceScopeFactory = serviceScopeFactory;
         _transientClass = transientClass;
     }
+
+    public async Task Demo()
+    {
+        CancellationTokenSource tokenSource = new CancellationTokenSource();
+        CancellationToken token = tokenSource.Token;
+        tokenSource.CancelAfter(2000);
+        
+        while (!token.IsCancellationRequested)
+        {
+            await Task.Delay(10000);
+        }
+        
+        
+        
+        using (var scope = _serviceScopeFactory.CreateScope())
+        {
+            var myScopedClass = scope.ServiceProvider.GetRequiredService<ScopedClass>();
+        }
+    }
+    
+    
+    
     public string Name { get; set; }
 }
+
+
 
 
 public class ScopedClass
