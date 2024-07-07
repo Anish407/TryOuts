@@ -8,7 +8,7 @@ Console.WriteLine("No exceptions thrown till now");
 // naiveSelect method gets executed
 foreach (var item in result)
 {
-    Console.WriteLine(item);
+    Console.WriteLine(item); 
 }
 
 Console.ReadLine();
